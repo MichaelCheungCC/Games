@@ -108,8 +108,9 @@ function checkMatch() {
     const optionTwoId = cardsChosenIds[1]
     if (optionOneId == optionTwoId) {
         alert('You have clicked the same image!')
+        cards[optionOneId].setAttribute('src', 'images/blank.png')
     }
-    if (cardsChosenName[0] == cardsChosenName[1]) {
+    if ((cardsChosenName[0] == cardsChosenName[1]) && (optionOneId != optionTwoId)) {
         alert('You found a match!')
         cards[optionOneId].setAttribute('src', 'images/white.png')
         cards[optionTwoId].setAttribute('src', 'images/white.png')
@@ -127,7 +128,7 @@ function checkMatch() {
     cardsChosenName = []
     cardsChosenIds = []
     document.getElementById('result').innerHTML = score
-    if (cardsWon.length == cardArray.length/2)
+    if (cardsWon.length == cardArray.length / 2)
         alert(`Congratulations! You finished the game. Your score is ${score}!`)
 }
 
