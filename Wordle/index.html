@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Wordle</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <h1 id="title"><b>Wordle</b></h1>
+    <br />
+    <div id="grid"></div>
+    <br />
+    <div class="keyboard" role="group" aria-label="Keyboard">
+        <div class="keyboardRowOne">
+            <button type="button" data-key="Q" class="keyboardKey">Q</button>
+            <button type="button" data-key="W" class="keyboardKey">W</button>
+            <button type="button" data-key="E" class="keyboardKey">E</button>
+            <button type="button" data-key="R" class="keyboardKey">R</button>
+            <button type="button" data-key="T" class="keyboardKey">T</button>
+            <button type="button" data-key="Y" class="keyboardKey">Y</button>
+            <button type="button" data-key="U" class="keyboardKey">U</button>
+            <button type="button" data-key="I" class="keyboardKey">I</button>
+            <button type="button" data-key="O" class="keyboardKey">O</button>
+            <button type="button" data-key="P" class="keyboardKey">P</button>
+        </div>
+        <div class="keyboardRowTwo">
+            <div data-testid="spacer" class="keyboardSpace"></div>
+            <button type="button" data-key="A" class="keyboardKey">A</button>
+            <button type="button" data-key="S" class="keyboardKey">S</button>
+            <button type="button" data-key="D" class="keyboardKey">D</button>
+            <button type="button" data-key="F" class="keyboardKey">F</button>
+            <button type="button" data-key="G" class="keyboardKey">G</button>
+            <button type="button" data-key="H" class="keyboardKey">H</button>
+            <button type="button" data-key="J" class="keyboardKey">J</button>
+            <button type="button" data-key="K" class="keyboardKey">K</button>
+            <button type="button" data-key="L" class="keyboardKey">L</button>
+            <div data-testid="spacer" class="keyboardSpace"></div>
+        </div>
+        <div class="keyboardRowThree">
+            <button type="button" data-key="↵"
+                class="keyboardKeySpecial">Enter</button>
+            <button type="button" data-key="Z" class="keyboardKey">Z</button>
+            <button type="button" data-key="X" class="keyboardKey">X</button>
+            <button type="button" data-key="C" class="keyboardKey">C</button>
+            <button type="button" data-key="V" class="keyboardKey">V</button>
+            <button type="button" data-key="B" class="keyboardKey">B</button>
+            <button type="button" data-key="N" class="keyboardKey">N</button>
+            <button type="button" data-key="M" class="keyboardKey">M</button>
+            <button type="button" data-key="←" aria-label="backspace"
+                class="keyboardKeySpecial"><svg xmlns="http://www.w3.org/2000/svg"
+                    height="24" viewBox="0 0 24 24" width="24" class="game-icon" data-testid="icon-backspace">
+                    <path fill="var(--color-tone-1)"
+                        d="M22 3H7c-.69 0-1.23.35-1.59.88L0 12l5.41 8.11c.36.53.9.89 1.59.89h15c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H7.07L2.4 12l4.66-7H22v14zm-11.59-2L14 13.41 17.59 17 19 15.59 15.41 12 19 8.41 17.59 7 14 10.59 10.41 7 9 8.41 12.59 12 9 15.59z">
+                    </path>
+                </svg></button>
+        </div>
+    </div>
+    <script src="app.js"></script>
+
+</body>
+
+
+</html>

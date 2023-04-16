@@ -1,0 +1,54 @@
+* {
+    font-family: Arial, Helvetica, sans-serif
+}
+
+h1#title {
+    text-align: center;
+    font-size: 30px;
+}
+
+* {
+    caret-color: transparent;
+}
+
+.grid-item {
+    border: solid 3px black;
+    height: 50px;
+    width: 50px;
+    margin: 5px 5px;
+    display: flex;
+    justify-content: center;
+}
+
+.keyboard {
+    justify-content: center;
+}
+
+.keyboardRowOne,
+.keyboardRowTwo,
+.keyboardRowThree {
+    display: flex;
+    justify-content: center;
+}
+
+.keyboardKey {
+    height: 45px;
+    width: 45px;
+    font-size: 22px;
+    margin: 3px
+}
+
+.keyboardKeySpecial {
+    height: 45px;
+    width: 70px;
+    font-size: 22px;
+    margin: 3px;
+}
+
+.boxCharacter {
+    margin: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: space;
+    font-size: 24px;
+}
