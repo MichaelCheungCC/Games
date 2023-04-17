@@ -1,11 +1,13 @@
 const gridSize = [6, 5];
-const wordOfTheDay = 'Hello';
+const wordOfTheDay = 'HELLO';
 let boxRow = 0;
 let boxColumn = 0;
 
 const gridDisplay = document.querySelector('#grid')
 const keyboardKey = document.querySelectorAll('.keyboardKey')
-const keyboardKeySpecial = document.querySelectorAll('.keyboardKeySpecial')
+const keyboardKeyEnter = document.querySelector('.keyboardKeyEnter')
+const keyboardKeyBackspace = document.querySelector('.keyboardKeyBackspace')
+
 
 // Board Control //
 function createBoard() {
@@ -33,9 +35,10 @@ keyboardKey.forEach(function (button) {
 });
 
 function addClick(button) {
-    button.addEventListener('click', function () {
+    var clickHandler = function() {
         addCharacter(button);
-    });
+    };
+    button.addEventListener('click', clickHandler);
 }
 
 function addCharacter(button) {
@@ -49,17 +52,70 @@ function addCharacter(button) {
         currentBox.appendChild(para);
 
         boxColumn += 1;
-    } 
+    }
 }
 
 // Enter Handling //
+keyboardKeyEnter.addEventListener('click', function () {
+    checkResult();
+})
+
 function checkResult() {
     // checkResult //
-    if (true) {
-        console.log('test')
+    if (boxColumn < 5) {
+        alert('Not enough letter');
     }
-    boxRow += 1;
-    boxColumn = 0;
+    else if (boxRow < 6) {
+        const currentAttempt = document.querySelectorAll(`[box-row=\"${boxRow}\"]`);
+        let userInput = "";
+
+        for (let i = 0; i < 5; i++) {
+            userInput += currentAttempt[i].querySelector('.boxCharacter').innerHTML;
+        }
+        if (wordOfTheDay == userInput) {
+            alert('Congratulations! You got the word!')
+            // removeEventListener //
+            keyboardKey.forEach(function (button) {
+                removeClick(button);
+            });
+
+            function removeClick(button) {
+                button.removeEventListener('click', clickHandler);
+            }
+            // TODO: removeEventListener for Enter key and Backspace Key //
+        }
+
+        for (let i = 0; i < 5; i++) {
+            if (wordOfTheDay[i] == currentAttempt[i].querySelector('.boxCharacter').innerHTML) {
+                console.log(wordOfTheDay[i]);
+                currentAttempt[i].classList.add('correctBox');
+            }
+            else {
+                currentAttempt[i].classList.add('incorrectBox')
+            }
+            // TODO: semicorrectBox //
+
+        }
+        if (boxRow == 5) {
+            alert('Game Over');
+        }
+        boxRow += 1;
+        boxColumn = 0;
+    }
 }
 
 // Backspace Handling //
+keyboardKeyBackspace.addEventListener('click', function () {
+    backspace();
+})
+
+function backspace() {
+    // remove a character //
+    if (boxColumn > 0) {
+        boxColumn -= 1;
+        const currentBox = document.querySelector(`[box-row=\"${boxRow}\"][box-column=\"${boxColumn}\"]`);
+        const para = currentBox.lastChild;
+        console.log(para);
+        currentBox.removeChild(para);
+    }
+}
