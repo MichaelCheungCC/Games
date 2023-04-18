@@ -33,12 +33,11 @@ createBoard()
 keyboardKey.forEach(function (button) {
     addClick(button);
 });
-
+function addCharacterHandler() {
+    addCharacter(this);
+}
 function addClick(button) {
-    var clickHandler = function() {
-        addCharacter(button);
-    };
-    button.addEventListener('click', clickHandler);
+    button.addEventListener('click', addCharacterHandler);
 }
 
 function addCharacter(button) {
@@ -56,9 +55,10 @@ function addCharacter(button) {
 }
 
 // Enter Handling //
-keyboardKeyEnter.addEventListener('click', function () {
+function addEnterHandler() {
     checkResult();
-})
+}
+keyboardKeyEnter.addEventListener('click', addEnterHandler)
 
 function checkResult() {
     // checkResult //
@@ -68,32 +68,35 @@ function checkResult() {
     else if (boxRow < 6) {
         const currentAttempt = document.querySelectorAll(`[box-row=\"${boxRow}\"]`);
         let userInput = "";
-
+        let ignore = [];
         for (let i = 0; i < 5; i++) {
             userInput += currentAttempt[i].querySelector('.boxCharacter').innerHTML;
         }
         if (wordOfTheDay == userInput) {
-            alert('Congratulations! You got the word!')
+            alert('Congratulations! You got it!');
             // removeEventListener //
             keyboardKey.forEach(function (button) {
-                removeClick(button);
+                button.removeEventListener('click', addCharacterHandler);
             });
-
-            function removeClick(button) {
-                button.removeEventListener('click', clickHandler);
-            }
-            // TODO: removeEventListener for Enter key and Backspace Key //
+            keyboardKeyEnter.removeEventListener('click', addEnterHandler);
+            keyboardKeyBackspace.removeEventListener('click', addBackspaceHandler);
         }
 
         for (let i = 0; i < 5; i++) {
-            if (wordOfTheDay[i] == currentAttempt[i].querySelector('.boxCharacter').innerHTML) {
-                console.log(wordOfTheDay[i]);
+            if (wordOfTheDay[i] == userInput[i]) {
                 currentAttempt[i].classList.add('correctBox');
+                numberOfCorrect += 1;
+                ignore.push(i)
+                wordOfTheDayRemaining = wordOfTheDay.slice(0, i) + wordOfTheDay.slice(i+1);
+                userInputRemaining = userInput.slice(0, i) + userInput.slice(i+1);
             }
-            else {
-                currentAttempt[i].classList.add('incorrectBox')
+        for (let i = 0; i < 5; i++) {
+            if (!ignore.includes(i) && userInput.indexOf(wordOfTheDay[i]) !== -1) {
+                currentAttempt[i].classList.add('semicorrectBox');
             }
-            // TODO: semicorrectBox //
+        }
+            // TODO: semicorrectBox incorrectBox //
+
 
         }
         if (boxRow == 5) {
@@ -105,9 +108,10 @@ function checkResult() {
 }
 
 // Backspace Handling //
-keyboardKeyBackspace.addEventListener('click', function () {
+function addBackspaceHandler() {
     backspace();
-})
+}
+keyboardKeyBackspace.addEventListener('click', addBackspaceHandler);
 
 function backspace() {
     // remove a character //
@@ -115,7 +119,6 @@ function backspace() {
         boxColumn -= 1;
         const currentBox = document.querySelector(`[box-row=\"${boxRow}\"][box-column=\"${boxColumn}\"]`);
         const para = currentBox.lastChild;
-        console.log(para);
         currentBox.removeChild(para);
     }
 }
