@@ -1,5 +1,4 @@
 const gridSize = [6, 5];
-const wordOfTheDay = 'HELLO';
 let boxRow = 0;
 let boxColumn = 0;
 
@@ -8,6 +7,19 @@ const keyboardKey = document.querySelectorAll('.keyboardKey')
 const keyboardKeyEnter = document.querySelector('.keyboardKeyEnter')
 const keyboardKeyBackspace = document.querySelector('.keyboardKeyBackspace')
 
+// API to retrieve all 5-letter English words
+let fiveLetterWords = []; // declare the variable outside the fetch() call
+const url = 'https://api.datamuse.com/words?sp=?????&max=1000';
+fetch(url)
+    .then(response => response.json())
+    .then(words => {
+        fiveLetterWords = words.map(word => word.word); // assign the array of words
+        // you can also call a function or do something else with fiveLetterWords here
+    })
+    .catch(error => console.error(error));
+
+console.log(fiveLetterWords);
+let wordOfTheDay = fiveLetterWords[Math.floor(Math.random() * 1000)];
 
 // Board Control //
 function createBoard() {
@@ -41,7 +53,7 @@ function addClick(button) {
 }
 
 function addCharacter(button) {
-    if (boxColumn < 5) {
+    if (boxColumn < gridSize[1]) {
         const getKey = button.getAttribute('data-key');
         const currentBox = document.querySelector(`[box-row=\"${boxRow}\"][box-column=\"${boxColumn}\"]`);
         const para = document.createElement('div');
@@ -62,14 +74,14 @@ keyboardKeyEnter.addEventListener('click', addEnterHandler)
 
 function checkResult() {
     // checkResult //
-    if (boxColumn < 5) {
+    if (boxColumn < gridSize[1]) {
         alert('Not enough letter');
     }
-    else if (boxRow < 6) {
+    else if (boxRow < gridSize[0]) {
         const currentAttempt = document.querySelectorAll(`[box-row=\"${boxRow}\"]`);
         let userInput = "";
         let ignore = [];
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < gridSize[1]; i++) {
             userInput += currentAttempt[i].querySelector('.boxCharacter').innerHTML;
         }
         if (wordOfTheDay == userInput) {
@@ -82,30 +94,32 @@ function checkResult() {
             keyboardKeyBackspace.removeEventListener('click', addBackspaceHandler);
         }
 
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < gridSize[1]; i++) {
             if (wordOfTheDay[i] == userInput[i]) {
                 currentAttempt[i].classList.add('correctBox');
-                numberOfCorrect += 1;
-                ignore.push(i)
-                wordOfTheDayRemaining = wordOfTheDay.slice(0, i) + wordOfTheDay.slice(i+1);
-                userInputRemaining = userInput.slice(0, i) + userInput.slice(i+1);
+                ignore.push(i);
             }
-        for (let i = 0; i < 5; i++) {
+        }
+        for (let i = 0; i < gridSize[1]; i++) {
             if (!ignore.includes(i) && userInput.indexOf(wordOfTheDay[i]) !== -1) {
-                currentAttempt[i].classList.add('semicorrectBox');
+                const foundIndex = userInput.indexOf(wordOfTheDay[i]);
+                currentAttempt[foundIndex].classList.add('semicorrectBox');
+                ignore.push(foundIndex);
             }
         }
-            // TODO: semicorrectBox incorrectBox //
-
-
-        }
-        if (boxRow == 5) {
-            alert('Game Over');
+        for (let i = 0; i < gridSize[1]; i++) {
+            if (!ignore.includes(i)) {
+                currentAttempt[i].classList.add('incorrectBox');
+            }
         }
         boxRow += 1;
         boxColumn = 0;
     }
+    if (boxRow == gridSize[0]) {
+        alert(`Game Over! The correct answer is ${wordOfTheDay}`);
+    }
 }
+
 
 // Backspace Handling //
 function addBackspaceHandler() {
