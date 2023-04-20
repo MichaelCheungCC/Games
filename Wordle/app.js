@@ -8,18 +8,22 @@ const keyboardKeyEnter = document.querySelector('.keyboardKeyEnter')
 const keyboardKeyBackspace = document.querySelector('.keyboardKeyBackspace')
 
 // API to retrieve all 5-letter English words
-let fiveLetterWords = []; // declare the variable outside the fetch() call
-const url = 'https://api.datamuse.com/words?sp=?????&max=1000';
-fetch(url)
-    .then(response => response.json())
-    .then(words => {
-        fiveLetterWords = words.map(word => word.word); // assign the array of words
-        // you can also call a function or do something else with fiveLetterWords here
-    })
-    .catch(error => console.error(error));
+let fiveLetterWords = [];
 
-console.log(fiveLetterWords);
-let wordOfTheDay = fiveLetterWords[Math.floor(Math.random() * 1000)];
+function logWords() {
+  console.log(fiveLetterWords);
+}
+
+const url = 'https://api.datamuse.com/words?sp=?????&max=1000';
+
+fetch(url)
+  .then(response => response.json())
+  .then(words => {
+    fiveLetterWords = words.map(word => word.word);
+    logWords(); // call the logWords() function here
+  })
+  .catch(error => console.error(error));
+
 
 // Board Control //
 function createBoard() {
