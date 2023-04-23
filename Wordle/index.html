@@ -6,15 +6,19 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/x-icon" href="./images/favicon.svg">
 </head>
 
 <body>
 
     <h1 id="title"><b>Wordle</b></h1>
     <br />
+    <div id="loader">
+        <div class="spinner"></div>
+    </div>
     <div id="grid"></div>
     <br />
-    <div class="keyboard" role="group" aria-label="Keyboard">
+    <div class="keyboard" role="group" aria-label="Keyboard" style="display: none">
         <div class="keyboardRowOne">
             <button type="button" data-key="Q" class="keyboardKey">Q</button>
             <button type="button" data-key="W" class="keyboardKey">W</button>

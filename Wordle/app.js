@@ -2,20 +2,22 @@ const gridSize = [6, 5];
 let boxRow = 0;
 let boxColumn = 0;
 
-const gridDisplay = document.querySelector('#grid')
-const keyboardKey = document.querySelectorAll('.keyboardKey')
-const keyboardKeyEnter = document.querySelector('.keyboardKeyEnter')
-const keyboardKeyBackspace = document.querySelector('.keyboardKeyBackspace')
+const gridDisplay = document.querySelector('#grid');
+const keyboard = document.querySelector('.keyboard');
+const keyboardKey = document.querySelectorAll('.keyboardKey');
+const keyboardKeyEnter = document.querySelector('.keyboardKeyEnter');
+const keyboardKeyBackspace = document.querySelector('.keyboardKeyBackspace');
+const loader = document.querySelector('#loader');
 
 // API to retrieve all 5-letter English words
-const baseUrl = 'https://api.datamuse.com/words?sp=&freq>=3000';
+const baseUrl = 'https://api.datamuse.com/words?sp=';
 const letters = 'abcdefghijklmnopqrstuvwxyz'.split('');
 
 async function getAllWords() {
     const words = [];
 
     for (const letter of letters) {
-        const url = `${baseUrl}${letter}[a-z]{4}&max=1000`;
+        const url = `${baseUrl}${letter}[a-z]{4}&max=100`;
         const response = await fetch(url);
         const data = await response.json();
         const letterWords = data.map(word => word.word);
@@ -28,6 +30,7 @@ getAllWords()
     .then(words => {
         const random = Math.floor(Math.random() * words.length);
         const wordOfTheDay = words[random].toUpperCase();
+        console.log(wordOfTheDay);
 
         // Board Control //
         function createBoard() {
@@ -46,6 +49,8 @@ getAllWords()
             }
         }
         createBoard()
+        loader.style.display = 'none';
+        keyboard.style.display = 'block';
 
         // Keyboard Control //
 
@@ -76,11 +81,11 @@ getAllWords()
 
         // Enter Handling //
         function addEnterHandler() {
-            checkResult();
+            addEnter();
         }
         keyboardKeyEnter.addEventListener('click', addEnterHandler)
 
-        function checkResult() {
+        function addEnter() {
             // checkResult //
             if (boxColumn < gridSize[1]) {
                 alert('Not enough letter');
@@ -88,7 +93,6 @@ getAllWords()
             else if (boxRow < gridSize[0]) {
                 const currentAttempt = document.querySelectorAll(`[box-row=\"${boxRow}\"]`);
                 let userInput = "";
-                let ignore = [];
                 for (let i = 0; i < gridSize[1]; i++) {
                     userInput += currentAttempt[i].querySelector('.boxCharacter').innerHTML;
                 }
@@ -103,24 +107,71 @@ getAllWords()
                     keyboardKeyBackspace.removeEventListener('click', addBackspaceHandler);
                 }
 
-                for (let i = 0; i < gridSize[1]; i++) {
-                    if (wordOfTheDay[i] == userInput[i]) {
-                        currentAttempt[i].classList.add('correctBox');
-                        ignore.push(i);
+                function checkResult(answer, input) {
+                    const correctnessArray = { correct: [], semicorrect: [], incorrect: [] };
+
+                    // Check for correct characters and positions
+                    for (let i = 0; i < gridSize[1]; i++) {
+                        if (answer[i] == input[i]) {
+                            correctnessArray.correct.push(i);
+                        }
+                    }
+
+                    // Check for correct characters but incorrect positions
+                    for (let i = 0; i < gridSize[1]; i++) {
+                        if (correctnessArray.correct.includes(i)) {
+                            continue; // Skip already matched characters
+                        }
+                        const foundIndices = [];
+                        // Find all occurrences of the current character in the input
+                        for (let j = 0; j < gridSize[1]; j++) {
+                            if (answer[i] === input[j]) {
+                                foundIndices.push(j);
+                            }
+                        }
+                        // Check if any of the found indices are not already matched
+                        const semicorrectIndex = foundIndices.find(
+                            (index) => !correctnessArray.correct.includes(index) && !correctnessArray.semicorrect.includes(index) // second condition solve bcbcc vs ebebb
+                        );
+                        if (semicorrectIndex !== undefined) {
+                            correctnessArray.semicorrect.push(semicorrectIndex);
+                        }
+                    }
+
+                    // Check for incorrect characters
+                    for (let i = 0; i < gridSize[1]; i++) {
+                        if (!correctnessArray.correct.includes(i) && !correctnessArray.semicorrect.includes(i)) {
+                            correctnessArray.incorrect.push(i);
+                        }
+                    }
+
+                    return correctnessArray;
+                }
+                const correctnessArray = checkResult(wordOfTheDay, userInput);
+                console.log(JSON.stringify(correctnessArray));
+                for (let i in correctnessArray.correct) {
+                    const j = correctnessArray.correct[i];
+                    currentAttempt[j].classList.add('correctBox');
+                    const greenKey = document.querySelector(`[data-key=\"${userInput[j]}\"]`);
+                    greenKey.classList.add('correctBox');
+                }
+                for (let i in correctnessArray.semicorrect) {
+                    const j = correctnessArray.semicorrect[i];
+                    currentAttempt[j].classList.add('semicorrectBox');
+                    const yellowKey = document.querySelector(`[data-key=\"${userInput[j]}\"]`);
+                    if (!yellowKey.classList.contains("correctBox")) {
+                        yellowKey.classList.add('semicorrectBox');
                     }
                 }
-                for (let i = 0; i < gridSize[1]; i++) {
-                    if (!ignore.includes(i) && userInput.indexOf(wordOfTheDay[i]) !== -1) {
-                        const foundIndex = userInput.indexOf(wordOfTheDay[i]);
-                        currentAttempt[foundIndex].classList.add('semicorrectBox');
-                        ignore.push(foundIndex);
+                for (let i in correctnessArray.incorrect) {
+                    const j = correctnessArray.incorrect[i];
+                    currentAttempt[j].classList.add('incorrectBox');
+                    const redKey = document.querySelector(`[data-key=\"${userInput[j]}\"]`);
+                    if ((!redKey.classList.contains("correctBox")) && (!redKey.classList.contains("incorrectBox"))) {
+                        redKey.classList.add('incorrectBox');
                     }
                 }
-                for (let i = 0; i < gridSize[1]; i++) {
-                    if (!ignore.includes(i)) {
-                        currentAttempt[i].classList.add('incorrectBox');
-                    }
-                }
+
                 boxRow += 1;
                 boxColumn = 0;
             }
@@ -132,11 +183,11 @@ getAllWords()
 
         // Backspace Handling //
         function addBackspaceHandler() {
-            backspace();
+            addBackspace();
         }
         keyboardKeyBackspace.addEventListener('click', addBackspaceHandler);
 
-        function backspace() {
+        function addBackspace() {
             // remove a character //
             if (boxColumn > 0) {
                 boxColumn -= 1;
