@@ -1,5 +1,7 @@
 * {
-    font-family: Arial, Helvetica, sans-serif
+    font-family: Arial, Helvetica, sans-serif;
+    caret-color: transparent;
+
 }
 
 h1#title {
@@ -43,10 +45,6 @@ h3#loading {
     }
 }
 
-* {
-    caret-color: transparent;
-}
-
 .grid-item {
     border: solid 3px black;
     height: 50px;
@@ -71,7 +69,7 @@ h3#loading {
     height: 45px;
     width: 45px;
     font-size: 22px;
-    margin: 3px
+    margin: 3px;
 }
 
 .keyboardKeyEnter,
@@ -101,3 +99,27 @@ h3#loading {
 .incorrectBox {
     background-color: rgb(255, 0, 0);
 }
+
+@media only screen and (max-width: 390px) {
+    .grid-item {
+        border: solid 3px black;
+        height: 12vw;
+        width: 12vw;
+        margin: 2vw 2vw;
+        display: flex;
+        justify-content: center;
+    }
+    .keyboardKey {
+        height: 8vw;
+        width: 8vw;
+        font-size: 3vw;
+        margin: 0.5vw;
+    }
+    .keyboardKeyEnter,
+    .keyboardKeyBackspace {
+        height: 8vw;
+        width: 12vw;
+        font-size: 3vw;
+        margin: 0.5vw;
+    }
+  }
