@@ -103,23 +103,28 @@ h3#loading {
 @media only screen and (max-width: 390px) {
     .grid-item {
         border: solid 3px black;
-        height: 12vw;
-        width: 12vw;
-        margin: 2vw 2vw;
+        height: 35px;
+        width: 35px;
+        margin: 4px;
         display: flex;
         justify-content: center;
+        border-radius: 3px;
     }
+
     .keyboardKey {
-        height: 8vw;
-        width: 8vw;
+        height: 28px;
+        width: 28px;
         font-size: 3vw;
         margin: 0.5vw;
+        border-radius: 1px;
     }
+
     .keyboardKeyEnter,
     .keyboardKeyBackspace {
-        height: 8vw;
-        width: 12vw;
+        height: 28px;
+        width: 42px;
         font-size: 3vw;
         margin: 0.5vw;
+        border-radius: 1px;
     }
-  }
+}
