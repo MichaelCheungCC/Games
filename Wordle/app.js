@@ -144,7 +144,11 @@ getAllWords()
                             correctnessArray.incorrect.push(i);
                         }
                     }
-
+                    
+                    // Sort the arrays in ascending order
+                    correctnessArray.correct.sort();
+                    correctnessArray.semicorrect.sort();
+                    correctnessArray.incorrect.sort();
                     return correctnessArray;
                 }
                 const correctnessArray = checkResult(wordOfTheDay, userInput);
@@ -153,6 +157,9 @@ getAllWords()
                     const j = correctnessArray.correct[i];
                     currentAttempt[j].classList.add('correctBox');
                     const greenKey = document.querySelector(`[data-key=\"${userInput[j]}\"]`);
+                    if (greenKey.classList.contains("semicorrectBox")) {
+                        greenKey.classList.remove('semicorrectBox');
+                    }
                     greenKey.classList.add('correctBox');
                 }
                 for (let i in correctnessArray.semicorrect) {
